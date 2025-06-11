@@ -22,10 +22,10 @@ class StreamDataset(Dataset):
 
         if rtsp_urls is None:
             rtsp_urls = [
-                'rtsp://10.1.1.227:7070/stream1',
-                'rtsp://10.1.1.227:7070/stream2',
-                'rtsp://10.1.1.227:7070/stream3',
-                'rtsp://10.1.1.227:7070/stream4'
+                "rtsp://10.1.1.116/stream1",
+                "rtsp://10.1.1.123/stream1",
+                "rtsp://10.1.1.171:7070/stream1",
+                "rtsp://10.1.1.227:7070/stream1",
             ]
         self.caps = [cv2.VideoCapture(u) for u in rtsp_urls]
         self.n_cams = len(self.caps)
