@@ -1,6 +1,6 @@
 {
-    "Room1": {
-        "name": "Room_506",
+    "sequence1": {
+        "name": "sequence1",
         "annot_fn_pattern": "cam{}_annot.txt",
         "video_fn_pattern": "cam{}.mp4",
         "cam_nbr": 4,
@@ -30,8 +30,8 @@
                 [0.0, 0.0, 1.0]
             ]
         ],
-        "train_ratio": 0.9,
+        "train_ratio": 0.8,
         "eval_ratio": 0.2,
-        "test_ratio": 0.1
+        "test_ratio": 0.2
     }
 }
