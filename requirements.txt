@@ -8,3 +8,4 @@ torch==1.13.0
 torchsummary==1.5.1
 tqdm==4.59.0
 yacs==0.1.8
+ultralytics>=8.0.0
