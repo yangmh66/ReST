@@ -26,7 +26,7 @@ def main():
     os.environ['CUDA_VISIBLE_DEVICES'] = cfg.MODEL.DEVICE_ID
 
     tracker = Tracker(cfg)
-    dataset = StreamGraphDataset(cfg, args.urls, tracker.feature_extractor, max_frames=args.frames)
+    dataset = StreamGraphDataset(cfg, tracker.feature_extractor, args.urls, max_frames=args.frames)
     dataloader = DataLoader(dataset, 1, collate_fn=udf_collate_fn)
 
     ckpt = tracker.load_param("test")

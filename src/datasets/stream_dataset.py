@@ -10,12 +10,14 @@ from torch.utils.data import Dataset
 from ultralytics import YOLO
 
 
-class StreamDataset(Dataset):
+class StreamGraphDataset(Dataset):
     """Dataset that streams frames from RTSP cameras and performs on-the-fly
     person detection.
     """
 
-    def __init__(self, cfg, feature_extractor, rtsp_urls: List[str] = None, dataset_dir: str = None, model_path: str = 'yolov8n.pt'):
+    def __init__(self, cfg, feature_extractor, rtsp_urls: List[str] = None,
+                 dataset_dir: str = None, model_path: str = 'yolov8n.pt',
+                 max_frames: int = 0):
         self.cfg = cfg
         self.device = self.cfg.MODEL.DEVICE
         self.feature_extractor = feature_extractor
@@ -31,15 +33,20 @@ class StreamDataset(Dataset):
         self.n_cams = len(self.caps)
 
         if dataset_dir is None:
-            dataset_dir = os.path.join(cfg.DATASET.DIR, cfg.DATASET.NAME, cfg.DATASET.SEQUENCE[0])
+            dataset_dir = os.path.join(cfg.DATASET.DIR, cfg.DATASET.NAME)
         with open(os.path.join(dataset_dir, 'metainfo.json')) as fp:
             meta = json.load(fp)
         seq_name = cfg.DATASET.SEQUENCE[0]
+        if seq_name not in meta:
+            seq_name = list(meta.keys())[0]
         self.homography = torch.tensor(meta[seq_name]['homography'], dtype=torch.float32)
 
         self.detector = YOLO(model_path)
         self.frame_id = 0
-        self.total_frames = cfg.DATASET.TOTAL_FRAMES if cfg.DATASET.TOTAL_FRAMES > 0 else 10 ** 9
+        if max_frames > 0:
+            self.total_frames = max_frames
+        else:
+            self.total_frames = cfg.DATASET.TOTAL_FRAMES if cfg.DATASET.TOTAL_FRAMES > 0 else 10 ** 9
 
         self.transform = T.Resize(self.cfg.FE.INPUT_SIZE)
 
@@ -153,3 +160,7 @@ class StreamDataset(Dataset):
 
         self.frame_id += 1
         return g, node_feature, edge_feature
+
+
+# backward compatibility
+StreamDataset = StreamGraphDataset
